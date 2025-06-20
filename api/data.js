@@ -3,6 +3,15 @@ export default function handler(req, res) {
  if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
+  const authorization = req.headers['authorization'];
+  const tenantId = req.headers['x-obc-tenantid'];
+  const subscriptionKey = req.headers['x-obc-subscriptionkey'];
+
+  if (authorization !== process.env.Authorization ||
+    tenantId !== process.env.X_OBC_TenantID ||
+    subscriptionKey !== process.env.X_OBC_SubscriptionKey) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
  
   const data = [
     {
